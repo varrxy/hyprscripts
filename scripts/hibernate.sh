@@ -40,17 +40,17 @@ else
     log "${GREEN}Swap file already exists.${RESET}"
 fi
 
-# Get the UUID of the swap file
-SWAP_UUID=$(sudo blkid -s UUID -o value /swapfile)
+# Get the UUID of the root partition
+UUID=$(findmnt / -o UUID -n)
 
 # Get the resume offset using filefrag
-RESUME_OFFSET=$(sudo filefrag -v /swapfile | awk '{ if($1=="0:"){print substr($4, 1, length($4)-2)} }')
+RESUME_OFFSET=$(sudo filefrag -v /swapfile | awk '$1=="0:" {print substr($4, 1, length($4)-2)}')
 
 # Update GRUB configuration
 log "${GREEN}Updating GRUB configuration...${RESET}"
 if ! grep -q "resume=" /etc/default/grub; then
-    sudo sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=\"|&resume=UUID=${SWAP_UUID} resume_offset=${RESUME_OFFSET} |" /etc/default/grub
-    log "${GREEN}Added resume parameter to GRUB with offset.${RESET}"
+    sudo sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=\"|&resume=UUID=${UUID} resume_offset=${RESUME_OFFSET} |" /etc/default/grub
+    log "${GREEN}Added resume parameter to GRUB with UUID and offset.${RESET}"
 else
     log "${YELLOW}Resume parameter already present in GRUB.${RESET}"
 fi
@@ -60,8 +60,8 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # Modify mkinitcpio.conf
 log "${GREEN}Updating /etc/mkinitcpio.conf...${RESET}"
-if ! grep -q "resume" /etc/mkinitcpio.conf; then
-    sudo sed -i 's|^HOOKS=.*|& resume|' /etc/mkinitcpio.conf
+if ! grep -q "\<resume\>" /etc/mkinitcpio.conf; then
+    sudo sed -i 's|\(HOOKS=(.*udev\)\(.*\)|\1 resume\2|' /etc/mkinitcpio.conf
     log "${GREEN}Added resume hook to mkinitcpio.conf.${RESET}"
 else
     log "${YELLOW}Resume hook already present in mkinitcpio.conf.${RESET}"

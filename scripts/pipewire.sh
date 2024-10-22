@@ -29,7 +29,7 @@ fi
 
 # Install PipeWire and Bluetooth Packages
 log "${YELLOW}Installing PipeWire and Bluetooth packages...${NC}"
-if sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-jack pipewire-pulse gst-plugin-pipewire libpulse wireplumber bluez bluez-utils blueman &>> "$LOG_FILE"; then
+if sudo pacman -S --noconfirm pipewire pipewire-alsa pipewire-jack pipewire-pulse gst-plugin-pipewire libpulse wireplumber bluez bluez-utils blueman network-manager-applet &>> "$LOG_FILE"; then
     log "${GREEN}PipeWire and Bluetooth packages installed successfully.${NC}"
 else
     log "${RED}Failed to install PipeWire and Bluetooth packages.${NC}"

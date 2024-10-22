@@ -28,7 +28,7 @@ fi
 
 # Update the system and install dependencies
 log "$BLUE" "Updating system and installing dependencies..."
-if pacman -Syu --needed git base-devel &>> "$LOG_FILE"; then
+if sudo pacman -Syu --needed git base-devel &>> "$LOG_FILE"; then
     log "$GREEN" "Dependencies installed successfully."
 else
     log "$RED" "Failed to install dependencies."

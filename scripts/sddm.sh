@@ -54,4 +54,13 @@ else
 fi
 log "${GREEN}SDDM configuration updated successfully.${NC}"
 
+# Enable SDDM service
+log "Enabling SDDM service..."
+if sudo systemctl enable sddm; then
+    log "${GREEN}SDDM service enabled successfully.${NC}"
+else
+    log "${RED}Failed to enable SDDM service.${NC}"
+    exit 1
+fi
+
 log "Installation and configuration complete. Check $LOG_FILE for details."

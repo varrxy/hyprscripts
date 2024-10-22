@@ -16,7 +16,7 @@ sudo pacman -Syu --noconfirm || { log "System update failed"; exit 1; }
 
 # Install NVIDIA packages
 log "Installing NVIDIA packages..."
-sudo pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings linux-headers-$(uname -r) || { log "Installation failed"; exit 1; }
+sudo pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings linux-headers || { log "Installation failed"; exit 1; }
 
 # Update mkinitcpio.conf
 log "Updating /etc/mkinitcpio.conf..."

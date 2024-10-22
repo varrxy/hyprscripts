@@ -10,24 +10,18 @@ log() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a "$LOG_FILE"
 }
 
-# Check for root privileges
-if [ "$EUID" -ne 0 ]; then
-    log "Please run as root."
-    exit 1
-fi
-
 # Update the system
 log "Updating the system..."
-sudo pacman -Syu --noconfirm
+sudo pacman -Syu --noconfirm || { log "System update failed"; exit 1; }
 
 # Install NVIDIA packages
 log "Installing NVIDIA packages..."
-sudo pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver
+sudo pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver linux-headers-$(uname -r) || { log "Installation failed"; exit 1; }
 
 # Update mkinitcpio.conf
 log "Updating /etc/mkinitcpio.conf..."
 if ! grep -q "nvidia" /etc/mkinitcpio.conf; then
-    sed -i '/^MODULES=/ s/)/ nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+    sudo sed -i '/^MODULES=/ s/)/ nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
     log "Added NVIDIA modules to mkinitcpio.conf."
 else
     log "NVIDIA modules already present in mkinitcpio.conf."
@@ -39,11 +33,11 @@ echo "options nvidia_drm modeset=1 fbdev=1" | sudo tee /etc/modprobe.d/nvidia.co
 
 # Rebuild the initramfs
 log "Rebuilding initramfs..."
-sudo mkinitcpio -P
+sudo mkinitcpio -P || { log "Initramfs rebuild failed"; exit 1; }
 
 # Enable NVIDIA suspend services
 log "Enabling NVIDIA suspend services..."
 sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
 
-# Final log and reboot
-log "NVIDIA setup completed. Please reboot your system."
+# Final log and reboot reminder
+log "NVIDIA setup completed. Please reboot your system to apply changes."

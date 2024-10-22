@@ -60,12 +60,14 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # Modify mkinitcpio.conf
 log "${GREEN}Updating /etc/mkinitcpio.conf...${RESET}"
-if ! grep -q "\<resume\>" /etc/mkinitcpio.conf; then
-    sudo sed -i 's|\(HOOKS=(.*udev\)\(.*\)|\1 resume\2|' /etc/mkinitcpio.conf
-    log "${GREEN}Added resume hook to mkinitcpio.conf.${RESET}"
-else
-    log "${YELLOW}Resume hook already present in mkinitcpio.conf.${RESET}"
-fi
+
+# Remove any existing 'resume' from the HOOKS line
+sudo sed -i 's|resume||g' /etc/mkinitcpio.conf
+
+# Add 'resume' back after 'udev' in the HOOKS line
+sudo sed -i 's|\(HOOKS=(.*udev\)\(.*\)|\1 resume\2|' /etc/mkinitcpio.conf
+
+log "${GREEN}Added resume hook to mkinitcpio.conf.${RESET}"
 
 # Rebuild initramfs
 log "${GREEN}Rebuilding initramfs...${RESET}"

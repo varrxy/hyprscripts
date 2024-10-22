@@ -61,6 +61,8 @@ if [[ "$install_hypr" == "y" ]]; then
     run_script "hyprland.sh"
 fi
 
+run_script "sddm.sh"
+
 # Ask user if they want to install themes
 read -p "Do you want to apply themes? (y/n): " install_themes
 if [[ "$install_themes" == "y" ]]; then

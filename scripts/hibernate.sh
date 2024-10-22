@@ -43,17 +43,20 @@ fi
 # Get the UUID of the swap file
 SWAP_UUID=$(sudo blkid -s UUID -o value /swapfile)
 
+# Get the resume offset using filefrag
+RESUME_OFFSET=$(sudo filefrag -v /swapfile | awk '{ if($1=="0:"){print substr($4, 1, length($4)-2)} }')
+
 # Update GRUB configuration
 log "${GREEN}Updating GRUB configuration...${RESET}"
-if ! sudo grep -q "resume=" /etc/default/grub; then
-    sudo sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=\"|&resume=UUID=${SWAP_UUID} |" /etc/default/grub
-    log "${GREEN}Added resume parameter to GRUB.${RESET}"
+if ! grep -q "resume=" /etc/default/grub; then
+    sudo sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT=\"|&resume=UUID=${SWAP_UUID} resume_offset=${RESUME_OFFSET} |" /etc/default/grub
+    log "${GREEN}Added resume parameter to GRUB with offset.${RESET}"
 else
     log "${YELLOW}Resume parameter already present in GRUB.${RESET}"
 fi
 
 # Update GRUB
-sudo update-grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 # Modify mkinitcpio.conf
 log "${GREEN}Updating /etc/mkinitcpio.conf...${RESET}"

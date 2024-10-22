@@ -33,7 +33,7 @@ line_exists() {
 
 # Update the system
 log "${BLUE}Updating the system...${NC}"
-if sudo pacman -Syu >> "$LOG_FILE" 2>&1; then
+if sudo pacman -Syu --noconfirm >> "$LOG_FILE" 2>&1; then
     log "${GREEN}System updated successfully.${NC}"
 else
     log "${RED}Failed to update the system.${NC}"
@@ -43,7 +43,7 @@ fi
 # Install NVIDIA drivers and utilities if not already installed
 if ! is_installed "nvidia-dkms"; then
     log "${YELLOW}Installing NVIDIA driver and utilities...${NC}"
-    if sudo pacman -S nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland >> "$LOG_FILE" 2>&1; then
+    if sudo pacman -S --noconfirm nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland >> "$LOG_FILE" 2>&1; then
         log "${GREEN}NVIDIA driver and utilities installed successfully.${NC}"
     else
         log "${RED}Failed to install NVIDIA driver and utilities.${NC}"
@@ -88,7 +88,7 @@ fi
 # Install VA-API driver if not installed
 if ! is_installed "libva-nvidia-driver"; then
     log "${YELLOW}Installing VA-API driver...${NC}"
-    if sudo pacman -S libva-nvidia-driver >> "$LOG_FILE" 2>&1; then
+    if sudo pacman -S --noconfirm libva-nvidia-driver >> "$LOG_FILE" 2>&1; then
         log "${GREEN}VA-API driver installed successfully.${NC}"
     else
         log "${RED}Failed to install VA-API driver.${NC}"

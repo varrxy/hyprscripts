@@ -25,10 +25,30 @@ else
 fi
 
 # Enable and Start PipeWire Services
-echo -e "${YELLOW}To enable and start the necessary services, run the following commands:${NC}"
-echo -e "${YELLOW}systemctl --user enable pipewire.service pipewire-pulse.service wireplumber.service${NC}"
-echo -e "${YELLOW}systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service${NC}"
-echo -e "${YELLOW}sudo systemctl enable bluetooth.service${NC}"
-echo -e "${YELLOW}sudo systemctl start bluetooth.service${NC}"
+echo -e "${YELLOW}Enabling and starting the necessary services...${NC}"
 
-echo -e "${GREEN}Installation complete! Please run the above commands to enable the services.${NC}"
+if systemctl --user enable pipewire.service pipewire-pulse.service wireplumber.service; then
+    echo -e "${GREEN}PipeWire services enabled.${NC}"
+else
+    echo -e "${RED}Failed to enable PipeWire services.${NC}"
+fi
+
+if systemctl --user start pipewire.service pipewire-pulse.service wireplumber.service; then
+    echo -e "${GREEN}PipeWire services started.${NC}"
+else
+    echo -e "${RED}Failed to start PipeWire services.${NC}"
+fi
+
+if sudo systemctl enable bluetooth.service; then
+    echo -e "${GREEN}Bluetooth service enabled.${NC}"
+else
+    echo -e "${RED}Failed to enable Bluetooth service.${NC}"
+fi
+
+if sudo systemctl start bluetooth.service; then
+    echo -e "${GREEN}Bluetooth service started.${NC}"
+else
+    echo -e "${RED}Failed to start Bluetooth service.${NC}"
+fi
+
+echo -e "${GREEN}Installation complete! The services are enabled and running.${NC}"

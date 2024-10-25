@@ -53,13 +53,18 @@ log "Rebuilding initramfs..."
 if sudo mkinitcpio -P; then
     log "Initramfs rebuilt successfully."
 else
-    log "Initramfs rebuild failed"
+    log "Initramfs rebuild failed."
     exit 1
 fi
 
 # Enable NVIDIA suspend services
 log "Enabling NVIDIA suspend services..."
-sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service
+if sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-resume.service; then
+    log "NVIDIA suspend services enabled successfully."
+else
+    log "Failed to enable NVIDIA suspend services."
+    exit 1
+fi
 
 # Final log and reboot reminder
 log "NVIDIA setup completed. Please reboot your system to apply changes."

@@ -24,18 +24,7 @@ fi
 
 # Check if a swap file exists
 if [ ! -f /swapfile ]; then
-    log "${YELLOW}Swap file not found. Creating a 4GB swap file...${RESET}"
-    
-    # Create a swap file
-    sudo fallocate -l 4G /swapfile || { log "${RED}Failed to create swap file.${RESET}"; exit 1; }
-    
-    # Set permissions
-    sudo chmod 600 /swapfile
-    sudo mkswap /swapfile
-    sudo swapon /swapfile
-
-    # Make it permanent
-    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+    log "${YELLOW}Swap file not found. Please create a swap file manually.${RESET}"
 else
     log "${GREEN}Swap file already exists.${RESET}"
 fi

@@ -19,7 +19,7 @@ log() {
 
 # Update the system
 log "Updating the system..."
-if sudo pacman -Syu --noconfirm linux-lts-headers; then
+if sudo pacman -Syu --noconfirm; then
     echo -e "${GREEN}System updated successfully.${NC}"
     log "System updated successfully."
 else
@@ -30,7 +30,7 @@ fi
 
 # Install NVIDIA packages
 log "Installing NVIDIA packages..."
-if sudo pacman -S --noconfirm nvidia-dkms nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings; then
+if sudo pacman -S --noconfirm linux-lts-headers nvidia-dkms nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings; then
     echo -e "${GREEN}NVIDIA packages installed successfully.${NC}"
     log "NVIDIA packages installed successfully."
 else

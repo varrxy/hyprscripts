@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 # Log file setup
 LOG_DIR="$(dirname "$0")/log"
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/installation.log"
+LOG_FILE="$LOG_DIR/pipewire.log"
 
 # Function to log messages
 log() {

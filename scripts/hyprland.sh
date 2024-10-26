@@ -51,6 +51,7 @@ packages=(
     "brightnessctl"
     "guvcview"
     "btop"
+    "nwg-look"
 )
 
 # Install packages

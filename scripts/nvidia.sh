@@ -41,9 +41,14 @@ fi
 
 # Update mkinitcpio.conf
 log "Updating /etc/mkinitcpio.conf..."
+sudo cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.bak
 if ! grep -q "nvidia" /etc/mkinitcpio.conf; then
-    sudo sed -i '/^MODULES=/ s/)/ nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-    log "Added NVIDIA modules to mkinitcpio.conf."
+    if sudo sed -i '/^MODULES=/ s/)/ nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf; then
+        log "Added NVIDIA modules to mkinitcpio.conf."
+    else
+        log "Failed to update mkinitcpio.conf."
+        exit 1
+    fi
 else
     log "NVIDIA modules already present in mkinitcpio.conf."
 fi
@@ -63,6 +68,27 @@ if sudo systemctl enable nvidia-suspend.service nvidia-hibernate.service nvidia-
     log "NVIDIA suspend services enabled successfully."
 else
     log "Failed to enable NVIDIA suspend services."
+    exit 1
+fi
+
+# Update GRUB configuration
+log "Updating GRUB configuration..."
+if grep -q "nvidia-drm.modeset=1" /etc/default/grub; then
+    log "NVIDIA option already present in GRUB_CMDLINE_LINUX_DEFAULT."
+else
+    if sudo sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/&nvidia-drm.modeset=1 /' /etc/default/grub; then
+        log "Added NVIDIA option to GRUB_CMDLINE_LINUX_DEFAULT successfully."
+    else
+        log "Failed to update GRUB_CMDLINE_LINUX_DEFAULT."
+        exit 1
+    fi
+fi
+
+# Regenerate GRUB configuration
+if sudo grub-mkconfig -o /boot/grub/grub.cfg; then
+    log "GRUB configuration regenerated successfully."
+else
+    log "Failed to regenerate GRUB configuration."
     exit 1
 fi
 

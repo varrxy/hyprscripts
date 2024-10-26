@@ -49,6 +49,9 @@ packages=(
     "hypridle"
     "hyprlock"
     "swww"
+    "brightnessctl"
+    "guvcview"
+    "btop"
 )
 
 # Install packages

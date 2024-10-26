@@ -45,7 +45,6 @@ packages=(
     "grim"
     "slurp"
     "git"
-    "hyprpaper"
     "hypridle"
     "hyprlock"
     "swww"

@@ -30,7 +30,7 @@ fi
 
 # Install NVIDIA packages
 log "Installing NVIDIA packages..."
-if sudo pacman -S --noconfirm linux-lts-headers nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings; then
+if sudo pacman -S --noconfirm linux-headers nvidia-dkms nvidia-utils lib32-nvidia-utils egl-wayland libva-nvidia-driver nvidia-settings; then
     echo -e "${GREEN}NVIDIA packages installed successfully.${NC}"
     log "NVIDIA packages installed successfully."
 else
